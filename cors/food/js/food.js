@@ -1,7 +1,10 @@
 'use strict';
 
+<<<<<<< HEAD
 'use strict';
 
+=======
+>>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c
 function loadData(src) {
     function rundomName() {
         return 'callback' + `${Math.ceil(1000 - 1000*Math.random())}`;
@@ -28,6 +31,7 @@ function addDataToFoodCard(data) {
         const rating = document.querySelector('[data-rating]');
         rating.textContent = data['rating'].toFixed(2);
         const starRating = document.querySelector('[data-star]');
+<<<<<<< HEAD
         starRating.setAttribute('style', `width: ${(100 * data['rating']) / 10}%`);
         const votes = document.querySelector('[data-votes]');
         votes.textContent = `${data['votes']} оценок`;
@@ -43,9 +47,16 @@ function addDataToFoodCard(data) {
         const total = document.createElement('span');
         total.textContent = `(+${data['total']})`;
         consumers.appendChild(total);
+=======
+        starRating.parentElement.style.width = starRating.parentElement.style.width - (100 - (100 * data['rating'] / 10));
+>>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c
     }
 }
 
 loadData(`https://neto-api.herokuapp.com/food/42`).then(addDataToFoodCard);
 loadData(`https://neto-api.herokuapp.com/food/42/rating`).then(addDataToFoodCard);
+<<<<<<< HEAD
 loadData(`https://neto-api.herokuapp.com/food/42/consumers`).then(addDataToFoodCard);
+=======
+loadData(`https://neto-api.herokuapp.com/food/42/consumers`);
+>>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c

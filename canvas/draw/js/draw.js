@@ -38,10 +38,17 @@ function tic(e) {
     changeColorLine(e);
     changeLieWidth();
     if(line === 100) {
+<<<<<<< HEAD
         changeLieWidth = false;
     }
     if(line === 5) {
         changeLieWidth = true;
+=======
+        checkWidthLine = false;
+    }
+    if(line === 5) {
+        checkWidthLine = true;
+>>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c
     }
 };
 
@@ -60,10 +67,18 @@ function changeColorLine(e) {
 }
 
 function changeLieWidth() {
+<<<<<<< HEAD
    if(checkWidthLine) {
         line++;
    }
    line--;
+=======
+   if(checkWidthLine === true) {
+        line++;
+   } else {
+        line--;    
+   }
+>>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c
 }
 
 function changeCanvas() {
