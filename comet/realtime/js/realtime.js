@@ -22,7 +22,7 @@ ws.addEventListener('message', event => {
 
     isFirst = false;
   } else {
-    const [label, data] = event.data.split('|');
+    const [label, data] = event.data.split(`,`);
     realtime.removeData();
     realtime.addData([Number(data)], label);
   }
