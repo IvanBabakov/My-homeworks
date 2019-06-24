@@ -3,7 +3,7 @@ const formSignIn = document.getElementsByClassName('sign-in-htm')[0];
 const formSignUp = document.getElementsByClassName('sign-up-htm')[0];
 const buttons = document.getElementsByClassName('button');
 
-function request(json, url) {
+function request(json, url, target) {
     const xhr = new XMLHttpRequest();
     xhr.open(
         'POST',
@@ -13,11 +13,19 @@ function request(json, url) {
     xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
             console.log(xhr.responseText);
-            const mass = document.getElementsByClassName('error-message')[1];
-            mass.value = 'Пользователь Иван успешно авторизован';
+            if(target == 'Войти') {
+                const mass = document.querySelector('.sign-in-htm > .error-message');
+                mass.value = 'Пользователь Иван успешно авторизован';
+            } else {
+                const mass = document.querySelector('.sign-up-htm > .error-message');
+                mass.value = 'Пользователь Иван успешно зарегистрирован';        
+            }
+        } else {
+            console.log('Error');
         }
-    }
+    };
     xhr.send(json);
+    
 
     // if(xhr.status !== 200) {
     //     console.log('Ошибка');
@@ -34,7 +42,7 @@ function submitForm(event) {
                 email: `${formSignIn.email.value}`,
                 password: `${formSignIn.pass.value}`
             })
-            request(jsonSignIn, 'https://neto-api.herokuapp.com/signin');
+            request(jsonSignIn, 'https://neto-api.herokuapp.com/signin', event.target.value);
             console.log('Enter');
         break;
         case 'Зарегистрироваться':
@@ -44,7 +52,7 @@ function submitForm(event) {
                 passwordcopy: `${formSignUp[name="passwordcopy"].value}`,
                 name: `${formSignUp[name="name"].value}`
             });
-            request(jsonSignUp, 'https://neto-api.herokuapp.com/signup')
+            request(jsonSignUp, 'https://neto-api.herokuapp.com/signup', event.target.value)
             console.log('Registration');
         break;
     }
