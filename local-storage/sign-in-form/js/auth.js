@@ -12,26 +12,21 @@ function request(json, url, target) {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function() {
         if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-            console.log(xhr.responseText);
-            if(target == 'Войти') {
-                const mass = document.querySelector('.sign-in-htm > .error-message');
-                mass.value = 'Пользователь Иван успешно авторизован';
+            const respons = JSON.parse(xhr.responseText);
+            const mass = target == 'Войти' ? document.querySelector('.sign-in-htm > .error-message') : document.querySelector('.sign-up-htm > .error-message');
+            if(respons.error) {
+                mass.value = respons.message;
             } else {
-                const mass = document.querySelector('.sign-up-htm > .error-message');
-                mass.value = 'Пользователь Иван успешно зарегистрирован';        
+                const nameUser = respons.name;
+                if(target == 'Войти') {
+                mass.value = `Пользователь ${nameUser} успешно авторизован`;
+                } else {
+                mass.value = `Пользователь ${nameUser} успешно зарегистрирован`;        
+                }
             }
-        } else {
-            console.log('Error');
         }
     };
     xhr.send(json);
-    
-
-    // if(xhr.status !== 200) {
-    //     console.log('Ошибка');
-    // } else {
-    //     console.log(xhr.responseText);
-    // }
 }
 
 function submitForm(event) {
@@ -43,7 +38,6 @@ function submitForm(event) {
                 password: `${formSignIn.pass.value}`
             })
             request(jsonSignIn, 'https://neto-api.herokuapp.com/signin', event.target.value);
-            console.log('Enter');
         break;
         case 'Зарегистрироваться':
             let jsonSignUp = JSON.stringify({
@@ -53,7 +47,6 @@ function submitForm(event) {
                 name: `${formSignUp[name="name"].value}`
             });
             request(jsonSignUp, 'https://neto-api.herokuapp.com/signup', event.target.value)
-            console.log('Registration');
         break;
     }
 }
