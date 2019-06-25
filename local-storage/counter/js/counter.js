@@ -18,7 +18,7 @@ function changeCounter(event) {
         if (currentCount > 0) {
             localStorage.setItem('counter', `${+currentCount - 1}`);
         }
-    } if(event.target.id === 'reset') {
+    } else if(event.target.id === 'reset') {
         localStorage.setItem('counter', '0');
     }
     showCount.textContent = localStorage.getItem('counter');
