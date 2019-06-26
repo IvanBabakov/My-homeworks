@@ -137,7 +137,6 @@ colorXhr.open(
     'https://neto-api.herokuapp.com/cart/colors',
     true
 );
-colorXhr.send();
 colorXhr.addEventListener('load', () => {
     const colorOptions = JSON.parse(colorXhr.responseText);
     for (let option of colorOptions) {
@@ -156,6 +155,7 @@ colorXhr.addEventListener('load', () => {
     console.log(allColor);
     console.log(colorOptions);   
 });
+colorXhr.send();
 
 const sizeXhr = new XMLHttpRequest();
 sizeXhr.open(
@@ -163,7 +163,6 @@ sizeXhr.open(
     'https://neto-api.herokuapp.com/cart/sizes',
     true
 );
-sizeXhr.send();
 sizeXhr.addEventListener('load', () => {
     const sizeOptions = JSON.parse(sizeXhr.responseText);
     for (let option of sizeOptions) {
@@ -182,6 +181,7 @@ sizeXhr.addEventListener('load', () => {
     console.log(allSize);
     console.log(sizeOptions);
 })
+sizeXhr.send();
 
 const cartXhr = new XMLHttpRequest();
 cartXhr.open(
@@ -189,7 +189,6 @@ cartXhr.open(
     'https://neto-api.herokuapp.com/cart',
     true
 );
-cartXhr.send();
 cartXhr.addEventListener('load', () => {
     const productOptions = JSON.parse(cartXhr.responseText);
     for (let option of productOptions) {
@@ -198,6 +197,28 @@ cartXhr.addEventListener('load', () => {
     setCart();
     console.log(productOptions);
 })
+cartXhr.send();
 
-const allColor = document.querySelectorAll("input[name='color']"); 
-const allSize = document.querySelectorAll("input[name='size']");
+const buttonAddToCart = document.getElementById('AddToCart');
+
+
+function addProductToCart(e) {
+    e.preventDefault();
+    const productForm = document.getElementById('AddToCartForm');
+    const formData = new FormData(productForm);
+    formData.append('productId', `${productForm.getAttribute('data-product-id')}`);
+    const addToCartXhr = new XMLHttpRequest();
+    addToCartXhr.open(
+    'POST',
+    'https://neto-api.herokuapp.com/cart',
+    true
+    );
+    addToCartXhr.addEventListener('load', () => {
+        const newValueCart = JSON.parse(addToCartXhr.responseText);
+        const cart = document.getElementById('quick-cart');
+        
+        console.log(newValueCart);
+    });
+    addToCartXhr.send(formData);
+}
+buttonAddToCart.addEventListener('click', addProductToCart)
