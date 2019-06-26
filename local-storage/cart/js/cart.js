@@ -74,6 +74,22 @@ function setSizeOptions(option) {
     perent.appendChild(divMain);
 }
 
+function setRemoveButton(e) {
+    const formData = new FormData();
+    formData.append('productId', `${e.target.getAttribute('data-id')}`);
+    const removeXhr = new XMLHttpRequest();
+    removeXhr.open(
+        'POST',
+        'https://neto-api.herokuapp.com/cart/remove',
+        true
+    );
+    removeXhr.addEventListener('load', () => {
+        console.log(JSON.parse(removeXhr.responseText));
+    });
+    removeXhr.send(formData);
+
+}
+
 function setCartOptions(option) {
     const perent = document.getElementById('quick-cart');
     const divMain = document.createElement('div');
@@ -104,7 +120,8 @@ function setCartOptions(option) {
     const spanRemove = document.createElement('span');
     spanRemove.classList.add('quick-cart-product-remove', 'remove');
     spanRemove.setAttribute('data-id', `${option.productId}`);
-    divMain.appendChild(spanRemove);   
+    divMain.appendChild(spanRemove);
+    spanRemove.addEventListener('click', setRemoveButton);
 }
 
 function setCart(){
@@ -201,7 +218,6 @@ cartXhr.send();
 
 const buttonAddToCart = document.getElementById('AddToCart');
 
-
 function addProductToCart(e) {
     e.preventDefault();
     const productForm = document.getElementById('AddToCartForm');
@@ -216,7 +232,11 @@ function addProductToCart(e) {
     addToCartXhr.addEventListener('load', () => {
         const newValueCart = JSON.parse(addToCartXhr.responseText);
         const cart = document.getElementById('quick-cart');
-        
+        cart.innerHTML = '';
+        for (let option of newValueCart) {
+            setCartOptions(option);
+        }
+        setCart();
         console.log(newValueCart);
     });
     addToCartXhr.send(formData);
