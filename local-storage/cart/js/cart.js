@@ -23,7 +23,9 @@ function setColorOptions(option) {
     if(!option.isAvailable) {
         input.setAttribute('disabled', '')
     };
-    // input.setAttribute('checked', '');
+    if(localStorage.getItem('color') == option.code) {
+    input.setAttribute('checked', '');
+    }
     divMain.appendChild(input);
     const label = document.createElement('label');
     label.setAttribute('for', `swatch-1-${option.code}`);
@@ -57,6 +59,9 @@ function setSizeOptions(option) {
     if(!option.isAvailable) {
         input.setAttribute('disabled', '');
     }
+    if(localStorage.getItem('size') == option.type) {
+        input.setAttribute('checked', '');
+    }
     divMain.appendChild(input);
     const label = document.createElement('label');
     label.textContent = option.title;
@@ -67,6 +72,63 @@ function setSizeOptions(option) {
     label.appendChild(image);
     divMain.appendChild(label);
     perent.appendChild(divMain);
+}
+
+function setCartOptions(option) {
+    const perent = document.getElementById('quick-cart');
+    const divMain = document.createElement('div');
+    divMain.classList.add('quick-cart-product', 'quick-cart-product-static');
+    divMain.setAttribute('id', `quick-cart-product-${option.id}`);
+    divMain.setAttribute('style', 'opacity: 1;');
+    perent.appendChild(divMain);
+    const divWrap = document.createElement('div');
+    divWrap.classList.add('quick-cart-product-wrap');
+    divMain.appendChild(divWrap);
+    const productImg = document.createElement('img');
+    productImg.setAttribute('src', `${option.pic}`);
+    productImg.setAttribute('title', `${option.title}`);
+    divWrap.appendChild(productImg);
+    const spanOne = document.createElement('span');
+    spanOne.classList.add('s1');
+    spanOne.setAttribute('style', 'background-color: #000; opacity: .5');
+    spanOne.textContent = `${(+option.quantity) * (+option.price)}`;
+    divWrap.appendChild(spanOne);
+    const spanTwo = document.createElement('span');
+    spanTwo.classList.add('s2');
+    divWrap.appendChild(spanTwo);
+    const spanCount = document.createElement('span');
+    spanCount.classList.add('count', 'hide', 'fadeUp');
+    spanCount.setAttribute('id', `quick-cart-product-count-${option.id}`);
+    spanCount.textContent = option.quantity;
+    divMain.appendChild(spanCount);
+    const spanRemove = document.createElement('span');
+    spanRemove.classList.add('quick-cart-product-remove', 'remove');
+    spanRemove.setAttribute('data-id', `${option.productId}`);
+    divMain.appendChild(spanRemove);   
+}
+
+function setCart(){
+    const allProduct = document.getElementsByClassName('quick-cart-product');
+    const perent = document.getElementById('quick-cart');
+    const linkPay = document.createElement('a');
+    linkPay.setAttribute('id', 'quick-cart-pay');
+    linkPay.setAttribute('quickbeam', 'cart-pay');
+    linkPay.classList.add('cart-ico');
+    if(allProduct.length > 0) {
+        linkPay.classList.add('open');
+    }
+    perent.appendChild(linkPay);
+    const strongText = document.createElement('strong');
+    strongText.classList.add('quick-cart-text');
+    strongText.innerHTML = 'Оформить заказ<br>';
+    linkPay.appendChild(strongText);
+    const spanPrice = document.createElement('span');
+    spanPrice.setAttribute('id', 'quick-cart-price');
+    linkPay.appendChild(spanPrice);
+    const allProductPrice = document.getElementsByClassName('s1');
+    for (let item of allProductPrice) {
+        spanPrice.textContent = `${+(spanPrice.textContent) + (+(item.textContent))}`;
+    }
 }
 
 const colorXhr = new XMLHttpRequest();
@@ -81,7 +143,18 @@ colorXhr.addEventListener('load', () => {
     for (let option of colorOptions) {
         setColorOptions(option)
     }
-    console.log(colorOptions)   
+    const allColor = document.querySelectorAll("input[name='color']");
+    for (let color of allColor) {
+        color.addEventListener('click', (e) => {
+            for (let item of allColor) {
+                item.removeAttribute('checked');
+            }
+            e.target.setAttribute('checked', '');
+            localStorage.setItem('color', `${e.target.value}`);
+        })
+    }
+    console.log(allColor);
+    console.log(colorOptions);   
 });
 
 const sizeXhr = new XMLHttpRequest();
@@ -96,6 +169,17 @@ sizeXhr.addEventListener('load', () => {
     for (let option of sizeOptions) {
         setSizeOptions(option)
     }
+    const allSize = document.querySelectorAll("input[name='size']");
+    for (let size of allSize) {
+        size.addEventListener('click', (e) => {
+            for (let item of allSize) {
+                item.removeAttribute('checked');
+            }
+            e.target.setAttribute('checked', '');
+            localStorage.setItem('size', `${e.target.value}`);
+        })
+    }
+    console.log(allSize);
     console.log(sizeOptions);
 })
 
@@ -107,5 +191,13 @@ cartXhr.open(
 );
 cartXhr.send();
 cartXhr.addEventListener('load', () => {
-    console.log(JSON.parse(cartXhr.responseText));
+    const productOptions = JSON.parse(cartXhr.responseText);
+    for (let option of productOptions) {
+        setCartOptions(option);
+    }
+    setCart();
+    console.log(productOptions);
 })
+
+const allColor = document.querySelectorAll("input[name='color']"); 
+const allSize = document.querySelectorAll("input[name='size']");
