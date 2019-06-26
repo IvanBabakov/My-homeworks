@@ -74,22 +74,6 @@ function setSizeOptions(option) {
     perent.appendChild(divMain);
 }
 
-function setRemoveButton(e) {
-    const formData = new FormData();
-    formData.append('productId', `${e.target.getAttribute('data-id')}`);
-    const removeXhr = new XMLHttpRequest();
-    removeXhr.open(
-        'POST',
-        'https://neto-api.herokuapp.com/cart/remove',
-        true
-    );
-    removeXhr.addEventListener('load', () => {
-        console.log(JSON.parse(removeXhr.responseText));
-    });
-    removeXhr.send(formData);
-
-}
-
 function setCartOptions(option) {
     const perent = document.getElementById('quick-cart');
     const divMain = document.createElement('div');
@@ -122,6 +106,26 @@ function setCartOptions(option) {
     spanRemove.setAttribute('data-id', `${option.productId}`);
     divMain.appendChild(spanRemove);
     spanRemove.addEventListener('click', setRemoveButton);
+}
+
+function setRemoveButton(e) {
+    const formData = new FormData();
+    formData.append('productId', `${e.target.getAttribute('data-id')}`);
+    const removeXhr = new XMLHttpRequest();
+    removeXhr.open(
+        'POST',
+        'https://neto-api.herokuapp.com/cart/remove',
+        true
+    );
+    removeXhr.addEventListener('load', () => {
+        const cart = document.getElementById('quick-cart');
+        cart.innerHTML = '';
+        for (let option of JSON.parse(removeXhr.responseText)) {
+            setCartOptions(option);
+        }
+        setCart();
+    });
+    removeXhr.send(formData);
 }
 
 function setCart(){
@@ -168,9 +172,7 @@ colorXhr.addEventListener('load', () => {
             e.target.setAttribute('checked', '');
             localStorage.setItem('color', `${e.target.value}`);
         })
-    }
-    console.log(allColor);
-    console.log(colorOptions);   
+    } 
 });
 colorXhr.send();
 
@@ -195,8 +197,6 @@ sizeXhr.addEventListener('load', () => {
             localStorage.setItem('size', `${e.target.value}`);
         })
     }
-    console.log(allSize);
-    console.log(sizeOptions);
 })
 sizeXhr.send();
 
@@ -212,7 +212,6 @@ cartXhr.addEventListener('load', () => {
         setCartOptions(option);
     }
     setCart();
-    console.log(productOptions);
 })
 cartXhr.send();
 
@@ -237,7 +236,6 @@ function addProductToCart(e) {
             setCartOptions(option);
         }
         setCart();
-        console.log(newValueCart);
     });
     addToCartXhr.send(formData);
 }
