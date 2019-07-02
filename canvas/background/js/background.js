@@ -16,3 +16,7 @@ for (let i = 0; i <= objectQuantity; i++) {
     context.arc(x, y, size, 0, 2 * Math.PI);
     context.fill();
 }
+
+function tic() {
+
+}
