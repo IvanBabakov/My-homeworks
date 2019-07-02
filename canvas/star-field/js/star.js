@@ -2,7 +2,7 @@
 
 const starField = document.getElementsByTagName('canvas')[0];
 const contextField = starField.getContext('2d');
-contextField.save();
+
 contextField.beginPath();
 contextField.fillRect(0, 0, 400, 200);
 
