@@ -29,7 +29,7 @@ function createComment(comment) {
   
   const elementText = document.createElement('p');
   elementText.classList.add('comment-text');
-  elementText.textContent = comment.text.split('\n').join('<br>');
+  elementText.textContent = comment.text.split('/n');
   elementComment.appendChild(elementText);
   
   const elementBottom = document.createElement('div');
