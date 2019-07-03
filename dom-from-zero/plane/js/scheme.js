@@ -1,8 +1,14 @@
-'use strict'
+'use strict';
 
+const bntShowScheme = document.getElementById('btnSeatMap');
 const btnSetFull = document.getElementById('btnSetFull');
 const btnSetEmpty = document.getElementById('btnSetEmpty');
 const schemePlane = document.getElementById('seatMapDiv');
+
+const totalPax = document.getElementById('totalPax');
+const totalAdult = document.getElementById('totalAdult');
+const totalHalf = document.getElementById('totalHalf');
+
 btnSetFull.setAttribute('disabled','');
 btnSetEmpty.setAttribute('disabled','');
 
@@ -118,13 +124,14 @@ function showScheme(event) {
     )
     xhr.addEventListener('load', () => {
         const choiceTitle = document.getElementById('seatMapTitle');
-        const noChoiceTitle = document.querySelector('h3.text-center');
         const planeMap = JSON.parse(xhr.responseText);
         console.log(planeMap);
         choiceTitle.textContent = `${planeMap.title} (${planeMap.passengers} пассажиров)`;
+        totalPax.textContent = `${planeMap.passengers}`;
+        totalAdult.textContent = '';
+        totalHalf.textContent = '';
         btnSetFull.removeAttribute('disabled');
         btnSetEmpty.removeAttribute('disabled');
-        // noChoiceTitle.setAttribute('hidden', '');
         if(schemePlane.children.length > 0) {
             while (schemePlane.firstChild) {
                 schemePlane.removeChild(schemePlane.firstChild);
@@ -137,10 +144,19 @@ function showScheme(event) {
         const allSeats = schemePlane.getElementsByClassName('seat-label');
         for (let seat of allSeats) {
             seat.addEventListener('click', (event) => {
+                
                 if(event.target.parentElement.classList.contains('adult')) {
                     event.target.parentElement.classList.remove('adult');
+                    totalAdult.textContent = `${+(totalAdult.textContent) - 1}`;
+                } else if(event.target.parentElement.classList.contains('half')) {
+                    event.target.parentElement.classList.remove('half');
+                    totalHalf.textContent = `${+(totalHalf.textContent) - 1}`;
+                } else if(event.altKey) {
+                    event.target.parentElement.classList.add('half');
+                    totalHalf.textContent = `${+(totalHalf.textContent) + 1}`;
                 } else {
-                    event.target.parentElement.classList.add('adult');
+                event.target.parentElement.classList.add('adult');
+                totalAdult.textContent = `${+(totalAdult.textContent) + 1}`;
                 }
             })
         }
@@ -148,5 +164,18 @@ function showScheme(event) {
     xhr.send();
 }
 
-const bntShowScheme = document.getElementById('btnSeatMap');
-bntShowScheme.addEventListener('click', showScheme)
+bntShowScheme.addEventListener('click', showScheme);
+btnSetEmpty.addEventListener('click', (event) => {
+    event.preventDefault();
+    const allSeats = schemePlane.getElementsByClassName('seat');
+    for (let seat of allSeats) {
+        seat.classList.remove('adult', 'half');            
+    }
+});
+btnSetFull.addEventListener('click', (event) => {
+    event.preventDefault();
+    const allSeats = schemePlane.getElementsByClassName('seat');
+    for (let seat of allSeats) {
+        seat.classList.add('adult');            
+    }
+});
