@@ -125,7 +125,6 @@ function showScheme(event) {
     xhr.addEventListener('load', () => {
         const choiceTitle = document.getElementById('seatMapTitle');
         const planeMap = JSON.parse(xhr.responseText);
-        console.log(planeMap);
         choiceTitle.textContent = `${planeMap.title} (${planeMap.passengers} пассажиров)`;
         totalPax.textContent = `${planeMap.passengers}`;
         totalAdult.textContent = '';
@@ -171,11 +170,17 @@ btnSetEmpty.addEventListener('click', (event) => {
     for (let seat of allSeats) {
         seat.classList.remove('adult', 'half');            
     }
+    totalAdult.textContent = '';
 });
 btnSetFull.addEventListener('click', (event) => {
     event.preventDefault();
     const allSeats = schemePlane.getElementsByClassName('seat');
     for (let seat of allSeats) {
+        if(seat.classList.contains('half')) {
+            seat.classList.remove('half');
+        }
         seat.classList.add('adult');            
     }
+    totalAdult.textContent = totalPax.textContent;
+    totalHalf.textContent = '';
 });
