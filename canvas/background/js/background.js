@@ -2,8 +2,10 @@
 
 const canvas = document.getElementById('wall');
 const ctx = canvas.getContext('2d');
-
 const objectQuantity = Math.random()*150 + 50;
+
+canvas.height = window.innerHeight; // масштабирую canvas
+canvas.width = window.innerWidth;
 
 function nextPoint(x, y, time) {
     return {
