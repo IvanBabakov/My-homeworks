@@ -15,19 +15,12 @@ let isFirst = true;
 const ws = new WebSocket('wss://neto-api.herokuapp.com/realtime');
 ws.addEventListener('message', event => {
   if (isFirst) {
-    event.data
-      .split(':')
-      .map(line => line.split(/["":{}]/))
-      .forEach(data => realtime.addData([Number(data[1])], data[0]));
-
+    const dataLatePeriod = JSON.parse(event.data);
+    dataLatePeriod.forEach(data => realtime.addData([data.online], data.time));
     isFirst = false;
   } else {
-<<<<<<< HEAD
-    const [label, data] = event.data.split(`,`);
-=======
-    const [label, data] = event.data.split(/\:\w/);
->>>>>>> 280caa404c573586de5c82304f0e0c62cc9a645c
+    const dataCurrent = JSON.parse(event.data);
     realtime.removeData();
-    realtime.addData([Number(data)], label);
+    realtime.addData([dataCurrent.online], dataCurrent.time);
   }
 });
