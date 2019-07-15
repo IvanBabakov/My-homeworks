@@ -1,6 +1,7 @@
 'use strict';
 
 function showComments(list) {
+  console.log(list);
   const commentsContainer = document.querySelector('.comments');
   const comments = list.map(createComment)
   const fragment = comments.reduce((fragment, currentValue) => {
@@ -29,7 +30,13 @@ function createComment(comment) {
   
   const elementText = document.createElement('p');
   elementText.classList.add('comment-text');
-  elementText.textContent = comment.text.split('/n');
+  const textComment = comment.text.split('\n');
+  for (let item of textComment) {
+    const breakText = document.createElement('br');
+    const text = document.createTextNode(item);
+    elementText.appendChild(breakText);
+    elementText.appendChild(text);
+  }
   elementComment.appendChild(elementText);
   
   const elementBottom = document.createElement('div');
