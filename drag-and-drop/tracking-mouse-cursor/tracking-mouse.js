@@ -8,13 +8,18 @@ const catEye = document.getElementsByClassName('cat_eye_left')[0];
 let shiftX = 0;
 let shiftY = 0;
 
+let tic = 0;
+
 document.addEventListener('mousemove', event => {
+    if(tic == 0) {
+        const bonds = event.target.getBoundingClientRect();
+        shiftX = event.pageX - bonds.left - window.pageXOffset;
+        shiftY = event.pageY - bonds.top - window.pageYOffset;    
+        tic = 1;
+    }
     
-    console.log(event.pageX, event.pageY);
-    
-    let x = event.pageX - (cat.offsetLeft + leftEye.offsetLeft);
-    let y = event.pageY - (cat.offsetTop + leftEye.offsetTop);
-    
+    let x = event.pageX - shiftX;
+    let y = event.pageY - shiftY;
     // const minX = leftEye.offsetLeft;
     // const minY = leftEye.offsetTop;
     // const maxX = leftEye.offsetLeft + leftEye.offsetWidth - catEye.offsetWidth;
@@ -23,8 +28,7 @@ document.addEventListener('mousemove', event => {
     //  x = Math.min(x, maxX);
     //  x = Math.max(x, minX);
 
-    console.log(cat.offsetLeft + leftEye.offsetLeft, cat.offsetTop + leftEye.offsetTop)
-    catEye.style.left = `${x + 788}px`;  
+    catEye.style.left = `${x}px`;  
     catEye.style.top = `${y}px`;
-    console.log(catEye.style.left, catEye.style.top)
+
 })
